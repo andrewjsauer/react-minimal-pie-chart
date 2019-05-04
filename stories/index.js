@@ -18,6 +18,12 @@ const defaultLabelStyle = {
   fill: '#121212',
 };
 
+const defaultTitleStyle = {
+  fontSize: '5px',
+  fontFamily: 'sans-serif',
+  fill: '#121212',
+};
+
 storiesOf('Pie Chart', module)
   .add('default', () => <PieChart data={dataMock} />)
   .add('custom size with "style"', () => (
@@ -90,6 +96,20 @@ storiesOf('Partial chart', module)
       totalValue={60}
     />
   ));
+
+storiesOf('Titles', module).add('default titles', () => (
+  <PieChart
+    data={dataMock}
+    label
+    labelStyle={{
+      ...defaultLabelStyle,
+    }}
+    title
+    titleStyle={{
+      ...defaultTitleStyle,
+    }}
+  />
+));
 
 storiesOf('Labels', module)
   .add('default labels', () => (

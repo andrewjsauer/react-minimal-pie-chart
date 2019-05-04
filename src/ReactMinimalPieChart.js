@@ -112,6 +112,41 @@ function renderLabels(data, props) {
   });
 }
 
+function renderTitles(data, props) {
+  const titlePosition = extractPercentage(props.radius, props.titlePosition);
+
+  return data.map((dataEntry, index) => {
+    const startAngle = props.startAngle + dataEntry.startOffset;
+    const halfAngle = startAngle + dataEntry.degrees / 2;
+    const halfAngleRadians = degreesToRadians(halfAngle);
+    const dx = Math.cos(halfAngleRadians) * titlePosition;
+    const dy = Math.sin(halfAngleRadians) * titlePosition;
+
+    // This object is passed as props to the "title" component
+    const titleProps = {
+      key: `title-${dataEntry.key || index}`,
+      x: props.cx,
+      y: props.cy,
+      dx,
+      dy,
+      textAnchor: evaluateLabelTextAnchor({
+        lineWidth: props.lineWidth,
+        labelPosition: props.titlePosition,
+        labelHorizontalShift: dx,
+      }),
+      data: data,
+      dataIndex: index,
+      color: dataEntry.color,
+      style: props.titleStyle,
+    };
+
+    return (
+      // eslint-disable-next-line react/jsx-key
+      <DefaultLabel {...titleProps}>{dataEntry.title}</DefaultLabel>
+    );
+  });
+}
+
 function renderSegments(data, props, hide) {
   let style = props.segmentsStyle;
   let reveal;
@@ -217,6 +252,7 @@ export default class ReactMinimalPieChart extends Component {
         >
           {renderSegments(extendedData, this.props, this.hideSegments)}
           {this.props.label && renderLabels(extendedData, this.props)}
+          {this.props.title && renderTitles(extendedData, this.props)}
           {this.props.injectSvg && this.props.injectSvg()}
         </svg>
         {this.props.children}
@@ -258,6 +294,9 @@ ReactMinimalPieChart.propTypes = {
   onMouseOver: PropTypes.func,
   onMouseOut: PropTypes.func,
   onClick: PropTypes.func,
+  title: PropTypes.bool,
+  titlePosition: PropTypes.number,
+  titleStyle: stylePropType,
 };
 
 ReactMinimalPieChart.defaultProps = {
@@ -278,4 +317,6 @@ ReactMinimalPieChart.defaultProps = {
   onMouseOver: undefined,
   onMouseOut: undefined,
   onClick: undefined,
+  title: false,
+  titlePosition: 112,
 };
