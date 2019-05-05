@@ -362,6 +362,22 @@
     });
   }
 
+  function getVerticalSegmentPositioningStartAngle(data) {
+    return 90 - data[0].degrees / 2;
+  }
+
+  function processProps(props, data) {
+    var processedProps = props;
+
+    if (props.verticalSegmentPositioning) {
+      processedProps = _extends({}, props, {
+        startAngle: getVerticalSegmentPositioningStartAngle(data)
+      });
+    }
+
+    return processedProps;
+  }
+
   var ReactMinimalPieChart =
   /*#__PURE__*/
   function (_Component) {
@@ -415,17 +431,18 @@
       }
 
       var extendedData = extendData(this.props);
+      var props = processProps(this.props, extendedData);
       return React__default.createElement("div", {
-        className: this.props.className,
-        style: this.props.style
+        className: props.className,
+        style: props.style
       }, React__default.createElement("svg", {
-        viewBox: evaluateViewBoxSize(this.props.ratio, VIEWBOX_SIZE),
+        viewBox: evaluateViewBoxSize(props.ratio, VIEWBOX_SIZE),
         width: "100%",
         height: "100%",
         style: {
           display: 'block'
         }
-      }, renderSegments(extendedData, this.props, this.hideSegments), this.props.label && renderLabels(extendedData, this.props), this.props.title && renderTitles(extendedData, this.props), this.props.injectSvg && this.props.injectSvg()), this.props.children);
+      }, renderSegments(extendedData, props, this.hideSegments), props.label && renderLabels(extendedData, props), props.title && renderTitles(extendedData, props), props.injectSvg && props.injectSvg()), props.children);
     };
 
     return ReactMinimalPieChart;
@@ -460,7 +477,8 @@
     onClick: PropTypes.func,
     title: PropTypes.bool,
     titlePosition: PropTypes.number,
-    titleStyle: stylePropType
+    titleStyle: stylePropType,
+    verticalSegmentPositioning: PropTypes.bool
   };
   ReactMinimalPieChart.defaultProps = {
     cx: VIEWBOX_HALF_SIZE,
@@ -481,7 +499,8 @@
     onMouseOut: undefined,
     onClick: undefined,
     title: false,
-    titlePosition: 112
+    titlePosition: 112,
+    verticalSegmentPositioning: false
   };
 
   exports.default = ReactMinimalPieChart;

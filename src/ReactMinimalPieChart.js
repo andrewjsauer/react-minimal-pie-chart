@@ -199,6 +199,23 @@ function renderSegments(data, props, hide) {
   });
 }
 
+function getVerticalSegmentPositioningStartAngle(data) {
+  return 90 - data[0].degrees / 2;
+}
+
+function processProps(props, data) {
+  let processedProps = props;
+
+  if (props.verticalSegmentPositioning) {
+    processedProps = {
+      ...props,
+      startAngle: getVerticalSegmentPositioningStartAngle(data),
+    };
+  }
+
+  return processedProps;
+}
+
 export default class ReactMinimalPieChart extends Component {
   constructor(props) {
     super(props);
@@ -238,24 +255,25 @@ export default class ReactMinimalPieChart extends Component {
       return null;
     }
     const extendedData = extendData(this.props);
+    const props = processProps(this.props, extendedData);
 
     return (
       <div
-        className={this.props.className}
-        style={this.props.style}
+        className={props.className}
+        style={props.style}
       >
         <svg
-          viewBox={evaluateViewBoxSize(this.props.ratio, VIEWBOX_SIZE)}
+          viewBox={evaluateViewBoxSize(props.ratio, VIEWBOX_SIZE)}
           width="100%"
           height="100%"
           style={{ display: 'block' }}
         >
-          {renderSegments(extendedData, this.props, this.hideSegments)}
-          {this.props.label && renderLabels(extendedData, this.props)}
-          {this.props.title && renderTitles(extendedData, this.props)}
-          {this.props.injectSvg && this.props.injectSvg()}
+          {renderSegments(extendedData, props, this.hideSegments)}
+          {props.label && renderLabels(extendedData, props)}
+          {props.title && renderTitles(extendedData, props)}
+          {props.injectSvg && props.injectSvg()}
         </svg>
-        {this.props.children}
+        {props.children}
       </div>
     );
   }
@@ -297,6 +315,7 @@ ReactMinimalPieChart.propTypes = {
   title: PropTypes.bool,
   titlePosition: PropTypes.number,
   titleStyle: stylePropType,
+  verticalSegmentPositioning: PropTypes.bool,
 };
 
 ReactMinimalPieChart.defaultProps = {
@@ -319,4 +338,5 @@ ReactMinimalPieChart.defaultProps = {
   onClick: undefined,
   title: false,
   titlePosition: 112,
+  verticalSegmentPositioning: false,
 };

@@ -12,6 +12,11 @@ const dataMock = [
   { title: 'Three', value: 20, color: '#6A2135' },
 ];
 
+const titlesDataMock = [
+  { title: 'Fixing the Bike', value: 40, color: '#E38627' },
+  { title: 'Stealing the Bike', value: 15, color: '#C13C37' },
+];
+
 const defaultLabelStyle = {
   fontSize: '5px',
   fontFamily: 'sans-serif',
@@ -19,7 +24,7 @@ const defaultLabelStyle = {
 };
 
 const defaultTitleStyle = {
-  fontSize: '5px',
+  fontSize: '4px',
   fontFamily: 'sans-serif',
   fill: '#121212',
 };
@@ -99,7 +104,7 @@ storiesOf('Partial chart', module)
 
 storiesOf('Titles', module).add('default titles', () => (
   <PieChart
-    data={dataMock}
+    data={titlesDataMock}
     label
     labelStyle={{
       ...defaultLabelStyle,
@@ -108,6 +113,8 @@ storiesOf('Titles', module).add('default titles', () => (
     titleStyle={{
       ...defaultTitleStyle,
     }}
+    radius={40}
+    verticalSegmentPositioning
   />
 ));
 
